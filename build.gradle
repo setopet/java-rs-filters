@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.peterse'
+version = '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(platform("io.dropwizard:dropwizard-bom:4.0.7"))
+    implementation 'org.glassfish.jersey.core:jersey-server:3.1.7'
+    implementation('io.dropwizard:dropwizard-core')
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
+}
+
+test {
+    useJUnitPlatform()
+}
