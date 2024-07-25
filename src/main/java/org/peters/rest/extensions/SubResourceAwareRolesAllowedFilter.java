@@ -12,7 +12,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * Authorization request filter which, unlike Jersey's {@code RolesAllowedDynamicFeature}
+ * Authorization request filter which, unlike <a
+ * href="https://github.com/eclipse-ee4j/jersey">Jersey's</a> {@code RolesAllowedDynamicFeature}
  * implementation, is aware of sub-resources.
  *
  * <p>Unfortunately, there seem not enough runtime information available to append the filter
@@ -38,6 +39,8 @@ import java.util.*;
  *   <li>{@link DenyAll} on classes is ignored
  *   <li>{@link PermitAll} on class-level is redundant.
  * </ul>
+ *
+ * @author Sebastian Peter
  */
 @Priority(Priorities.AUTHORIZATION)
 public class SubResourceAwareRolesAllowedFilter implements ContainerRequestFilter {
