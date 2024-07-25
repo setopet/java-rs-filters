@@ -7,10 +7,16 @@ import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.Collection;
 
+/** Filters {@link ContainerRequestFilter} according to provided roles */
 public class RolesAllowedFilter implements ContainerRequestFilter {
 
   private final Collection<String> roles;
 
+  /**
+   * Roles for which requests should be filtered
+   *
+   * @param roles the roles
+   */
   public RolesAllowedFilter(final Collection<String> roles) {
     this.roles = roles;
   }
