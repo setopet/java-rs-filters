@@ -16,17 +16,14 @@ public class RolesAllowedFilter implements ContainerRequestFilter {
   }
 
   public void filter(final ContainerRequestContext requestContext) {
-    if (!roles.isEmpty() && !isAuthorized(requestContext)) {
+    if (!roles.isEmpty()
+        && (requestContext.getSecurityContext() == null
+            || requestContext.getSecurityContext().getUserPrincipal() != null)) {
       throw new ForbiddenException();
     }
     final SecurityContext securityContext = requestContext.getSecurityContext();
     if (roles.stream().noneMatch(securityContext::isUserInRole)) {
       throw new ForbiddenException();
     }
-  }
-
-  private static boolean isAuthorized(final ContainerRequestContext requestContext) {
-    return requestContext.getSecurityContext() != null
-        && requestContext.getSecurityContext().getUserPrincipal() != null;
   }
 }
