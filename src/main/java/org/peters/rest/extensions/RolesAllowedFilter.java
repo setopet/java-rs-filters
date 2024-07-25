@@ -18,7 +18,7 @@ public class RolesAllowedFilter implements ContainerRequestFilter {
   public void filter(final ContainerRequestContext requestContext) {
     if (!roles.isEmpty()
         && (requestContext.getSecurityContext() == null
-            || requestContext.getSecurityContext().getUserPrincipal() != null)) {
+            || requestContext.getSecurityContext().getUserPrincipal() == null)) {
       throw new ForbiddenException();
     }
     final SecurityContext securityContext = requestContext.getSecurityContext();
