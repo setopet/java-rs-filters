@@ -4,6 +4,12 @@ import jakarta.ws.rs.container.ResourceInfo;
 
 import java.lang.reflect.Method;
 
+/**
+ * Builder for {@link ResourceInfo} to improve testability of JAX-RS filters without relying too
+ * heavily on mocks for more complex scenarios
+ *
+ * @author Sebastian Peter
+ */
 public class ResourceInfoBuilder {
 
   private Class<?> resourceClass;

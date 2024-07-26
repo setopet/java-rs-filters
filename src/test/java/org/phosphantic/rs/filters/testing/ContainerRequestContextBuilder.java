@@ -7,6 +7,12 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.*;
 
+/**
+ * Builder for {@link ContainerRequestContext} to improve testability of JAX-RS filters without
+ * relying too heavily on mocks for more complex scenarios
+ *
+ * @author Sebastian Peter
+ */
 public class ContainerRequestContextBuilder {
 
   private UriInfo uriInfo;

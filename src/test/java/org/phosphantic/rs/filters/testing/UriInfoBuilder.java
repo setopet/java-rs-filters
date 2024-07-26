@@ -9,6 +9,12 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Builder for {@link UriInfo} to improve testability of JAX-RS filters without relying too heavily
+ * on mocks for more complex scenarios
+ *
+ * @author Sebastian Peter
+ */
 public class UriInfoBuilder {
 
   private List<Object> matchedResources;

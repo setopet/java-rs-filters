@@ -7,6 +7,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Builder for {@link SecurityContext} to improve testability of JAX-RS filters without relying too
+ * heavily on mocks for more complex scenarios
+ *
+ * @author Sebastian Peter
+ */
 public class SecurityContextBuilder {
 
   private Principal principal;
