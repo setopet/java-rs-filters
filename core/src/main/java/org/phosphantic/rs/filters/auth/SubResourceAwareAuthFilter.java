@@ -87,7 +87,8 @@ public class SubResourceAwareAuthFilter implements ContainerRequestFilter {
   private static Set<String> getRolesFromMatchedResourceClasses(
       final ContainerRequestContext containerRequestContext) {
     final HashSet<String> allowedRoles = new HashSet<>();
-    // UriInfo.getMatchedResources gets both sub-resources and resources with sub-resource locators
+    // UriInfo.getMatchedResources gets both (sub-)resources and resources with sub-resource
+    // locators
     for (final Object resource : containerRequestContext.getUriInfo().getMatchedResources()) {
       final RolesAllowed roles = resource.getClass().getAnnotation(RolesAllowed.class);
       if (roles != null) {
