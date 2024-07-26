@@ -18,7 +18,6 @@ public class CatResource {
     }
 }
 
-@Path("/noise")
 public class NoiseResource {
 
     @GET
