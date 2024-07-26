@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * Authorization request filter which, unlike <a
  * href="https://github.com/eclipse-ee4j/jersey">Jersey's</a> {@code RolesAllowedDynamicFeature}
- * implementation, is aware of sub-resources.
+ * implementation, is aware of sub-resource locators.
  *
  * <p>Unfortunately, there seem not enough runtime information available to append sub-resource
  * aware auth filters dynamically via {@link DynamicFeature}.
@@ -31,7 +31,7 @@ import java.util.*;
  *   <li>{@link DenyAll}
  * </ul>
  *
- * <p>The precedence of those annotations is handled similarly to {@code
+ * <p>The precedence of those annotations is handled equivalently to {@code
  * RolesAllowedDynamicFeature}, except that for class-level annotations, annotations of all matched
  * resources classes - both delegating resources and sub-resources - are considered:
  *
@@ -48,6 +48,9 @@ import java.util.*;
  * jakarta.ws.rs.ForbiddenException} is raised.
  *
  * @author Sebastian Peter
+ * @see <a
+ *     href="https://jakarta.ee/specifications/restful-ws/3.0/jakarta-restful-ws-spec-3.0.html#sub_resources">JAX-RS
+ *     subresource locators</a>
  */
 @Priority(Priorities.AUTHORIZATION)
 public class SubResourceAwareAuthFilter implements ContainerRequestFilter {
