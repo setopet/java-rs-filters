@@ -22,12 +22,10 @@ import org.phosphantic.rs.filters.testing.SecurityContextBuilder;
 public class SubResourceAwareAuthFilterTest {
 
   @Path("/cat")
-  // RolesAllowed on the class takes precedence over PermitAll
   @PermitAll
+  @DenyAll
   @RolesAllowed({"HUMAN"})
   public static class CatResource {
-
-    private boolean isOnSecretMission;
 
     @GET
     public Response cat() {
@@ -35,13 +33,12 @@ public class SubResourceAwareAuthFilterTest {
     }
 
     @GET
-    // Deny all takes precedence over RolesAllowed and PermitAll
     @PermitAll
     @DenyAll
     @RolesAllowed("ADEPT")
     @Path("/bath")
     public Response bath() {
-      return Response.ok("taking a bath").build();
+      return Response.ok("never take a bath").build();
     }
 
     @Path("/noise")
@@ -49,18 +46,20 @@ public class SubResourceAwareAuthFilterTest {
       return new NoiseResource();
     }
 
+    @Path("/need")
+    @GET
+    @PermitAll
+    public Response need() {
+      return Response.ok("provide me with food!").build();
+    }
+
     @GET
     @Path("/mission")
     public Object mission() {
-      if (!isOnSecretMission) {
-        return new ForagingResource();
-      } else {
-        return new SecretMissionResource();
-      }
+      return new SecretMissionResource();
     }
   }
 
-  // RolesAllowed on the sub resource locator class takes precedence over PermitAll
   @PermitAll
   public static class NoiseResource {
 
@@ -70,21 +69,9 @@ public class SubResourceAwareAuthFilterTest {
     }
   }
 
-  @RolesAllowed("HUMAN")
-  public static class ForagingResource {
-
-    @GET
-    // PermitAll on the method takes precedence over RolesAllowed on the class
-    @PermitAll
-    public Response food() {
-      return Response.ok("searching for food").build();
-    }
-  }
-
   public static class SecretMissionResource {
 
     @GET
-    // RolesAllowed on the method takes precedence over PermitAll
     @PermitAll
     @RolesAllowed("ADEPT")
     public Response domination() {
@@ -93,7 +80,7 @@ public class SubResourceAwareAuthFilterTest {
   }
 
   @Test
-  public void shouldDenyAll() {
+  public void shouldGrantPrecedenceToDenyAllOnMethodOverPermitAllAndRolesAllowed() {
     final ContainerRequestFilter requestFilter =
         new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
@@ -102,40 +89,19 @@ public class SubResourceAwareAuthFilterTest {
                 .build());
     assertThrows(
         ForbiddenException.class,
-        () -> requestFilter.filter(new ContainerRequestContextBuilder().build()));
+        () ->
+            requestFilter.filter(
+                new ContainerRequestContextBuilder()
+                    .withSecurityContext(
+                        new SecurityContextBuilder()
+                            .withSomeUserPrincipal()
+                            .withRoles(Arrays.asList("ADEPT", "HUMAN"))
+                            .build())
+                    .build()));
   }
 
   @Test
-  public void shouldPermitAll() throws IOException {
-    final ContainerRequestFilter requestFilter =
-        new SubResourceAwareAuthFilter(
-            new ResourceInfoBuilder()
-                .withResourceClass(ForagingResource.class)
-                .withResourceMethod("food")
-                .build());
-    requestFilter.filter(new ContainerRequestContextBuilder().build());
-  }
-
-  @Test
-  public void shouldAllowRoleOnMethod() throws IOException {
-    final ContainerRequestFilter requestFilter =
-        new SubResourceAwareAuthFilter(
-            new ResourceInfoBuilder()
-                .withResourceClass(SecretMissionResource.class)
-                .withResourceMethod("domination")
-                .build());
-    requestFilter.filter(
-        new ContainerRequestContextBuilder()
-            .withSecurityContext(
-                new SecurityContextBuilder()
-                    .withSomeUserPrincipal()
-                    .withRoles(Collections.singleton("ADEPT"))
-                    .build())
-            .build());
-  }
-
-  @Test
-  public void shouldDisAllowRoleOnMethod() {
+  public void shouldGrantPrecedenceToRolesAllowedOnMethodOverPermitAll() throws IOException {
     final ContainerRequestFilter requestFilter =
         new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
@@ -150,32 +116,30 @@ public class SubResourceAwareAuthFilterTest {
                     .withSecurityContext(
                         new SecurityContextBuilder().withSomeUserPrincipal().withNoRoles().build())
                     .build()));
-  }
-
-  @Test
-  public void shouldAllowRoleOnClass() throws IOException {
-    final ContainerRequestFilter requestFilter =
-        new SubResourceAwareAuthFilter(
-            new ResourceInfoBuilder()
-                .withResourceClass(CatResource.class)
-                .withResourceMethod("cat")
-                .build());
     requestFilter.filter(
         new ContainerRequestContextBuilder()
-            .withUriInfo(
-                new UriInfoBuilder()
-                    .withMatchedResources(Collections.singletonList(new CatResource()))
-                    .build())
             .withSecurityContext(
                 new SecurityContextBuilder()
                     .withSomeUserPrincipal()
-                    .withRoles(Collections.singletonList("HUMAN"))
+                    .withRoles(Collections.singleton("ADEPT"))
                     .build())
             .build());
   }
 
   @Test
-  public void shouldDisallowRoleOnClass() {
+  public void shouldGrantPrecedenceToPermitAllOnMethodOverRolesAllowedOnClass() throws IOException {
+    final ContainerRequestFilter requestFilter =
+        new SubResourceAwareAuthFilter(
+            new ResourceInfoBuilder()
+                .withResourceClass(CatResource.class)
+                .withResourceMethod("need")
+                .build());
+    requestFilter.filter(new ContainerRequestContextBuilder().build());
+  }
+
+  @Test
+  public void shouldGrantPrecedenceToRolesAllowedOnClassOverDenyAllAndPermitAll()
+      throws IOException {
     final ContainerRequestFilter requestFilter =
         new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
@@ -194,21 +158,11 @@ public class SubResourceAwareAuthFilterTest {
                     .withSecurityContext(
                         new SecurityContextBuilder().withSomeUserPrincipal().withNoRoles().build())
                     .build()));
-  }
-
-  @Test
-  public void shouldAllowRoleOnLocatorResource() throws IOException {
-    final ContainerRequestFilter requestFilter =
-        new SubResourceAwareAuthFilter(
-            new ResourceInfoBuilder()
-                .withResourceClass(NoiseResource.class)
-                .withResourceMethod("meow")
-                .build());
     requestFilter.filter(
         new ContainerRequestContextBuilder()
             .withUriInfo(
                 new UriInfoBuilder()
-                    .withMatchedResources(Arrays.asList(new NoiseResource(), new CatResource()))
+                    .withMatchedResources(Collections.singletonList(new CatResource()))
                     .build())
             .withSecurityContext(
                 new SecurityContextBuilder()
@@ -219,7 +173,7 @@ public class SubResourceAwareAuthFilterTest {
   }
 
   @Test
-  public void shouldDisallowRoleOnLocatorResource() {
+  public void shouldApplyRolesAllowedFromLocatorResourceToSubResource() throws IOException {
     final ContainerRequestFilter requestFilter =
         new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
@@ -239,5 +193,17 @@ public class SubResourceAwareAuthFilterTest {
                     .withSecurityContext(
                         new SecurityContextBuilder().withSomeUserPrincipal().withNoRoles().build())
                     .build()));
+    requestFilter.filter(
+        new ContainerRequestContextBuilder()
+            .withUriInfo(
+                new UriInfoBuilder()
+                    .withMatchedResources(Arrays.asList(new NoiseResource(), new CatResource()))
+                    .build())
+            .withSecurityContext(
+                new SecurityContextBuilder()
+                    .withSomeUserPrincipal()
+                    .withRoles(Collections.singletonList("HUMAN"))
+                    .build())
+            .build());
   }
 }
