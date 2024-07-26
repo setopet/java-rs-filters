@@ -7,6 +7,10 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.*;
+import org.phosphantic.rs.extensions.internal.DenyAllFilter;
+import org.phosphantic.rs.extensions.internal.PermitAllFilter;
+import org.phosphantic.rs.extensions.internal.RolesAllowedFilter;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -16,8 +20,8 @@ import java.util.*;
  * href="https://github.com/eclipse-ee4j/jersey">Jersey's</a> {@code RolesAllowedDynamicFeature}
  * implementation, is aware of sub-resources.
  *
- * <p>Unfortunately, there seem not enough runtime information available to append the filter
- * dynamically via {@link DynamicFeature}.
+ * <p>Unfortunately, there seem not enough runtime information available to append sub-resource
+ * aware auth filters dynamically via {@link DynamicFeature}.
  *
  * <p>The following security annotations are supported:
  *
@@ -28,8 +32,8 @@ import java.util.*;
  * </ul>
  *
  * <p>The precedence of those annotations is handled similarly to {@code
- * RolesAllowedDynamicFeature}, except that for class-level annotations, annotations of
- * all matched resources classes - both delegating resources and sub-resources - are considered:
+ * RolesAllowedDynamicFeature}, except that for class-level annotations, annotations of all matched
+ * resources classes - both delegating resources and sub-resources - are considered:
  *
  * <ul>
  *   <li>{@link DenyAll} on the method
@@ -37,8 +41,11 @@ import java.util.*;
  *   <li>{@link PermitAll} on the method
  *   <li>{@link RolesAllowed} on classes
  *   <li>{@link DenyAll} on classes is ignored
- *   <li>{@link PermitAll} on class-level is redundant.
+ *   <li>{@link PermitAll} on classes is redundant
  * </ul>
+ *
+ * <p>For any violation of the implied authorization restrictions, a {@link
+ * jakarta.ws.rs.ForbiddenException} is raised.
  *
  * @author Sebastian Peter
  */
@@ -55,23 +62,23 @@ public class SubResourceAwareRolesAllowedFilter implements ContainerRequestFilte
   @Override
   public void filter(final ContainerRequestContext requestContext) throws IOException {
     final Method resourceMethod = resourceInfo.getResourceMethod();
-    ContainerRequestFilter delegate;
+    ContainerRequestFilter authFilter;
     if (resourceMethod.isAnnotationPresent(DenyAll.class)) {
-      delegate = new DenyAllFilter();
+      authFilter = new DenyAllFilter();
     } else if (resourceMethod.isAnnotationPresent(RolesAllowed.class)) {
       final RolesAllowed rolesAllowedOnMethod = resourceMethod.getAnnotation(RolesAllowed.class);
-      delegate = new RolesAllowedFilter(Arrays.asList(rolesAllowedOnMethod.value()));
+      authFilter = new RolesAllowedFilter(Arrays.asList(rolesAllowedOnMethod.value()));
     } else if (resourceMethod.isAnnotationPresent(PermitAll.class)) {
-      delegate = new PermitAllFilter();
+      authFilter = new PermitAllFilter();
     } else {
       final Set<String> allowedRolesOnClasses = getRolesFromMatchedResourceClasses(requestContext);
       if (!allowedRolesOnClasses.isEmpty()) {
-        delegate = new RolesAllowedFilter(allowedRolesOnClasses);
+        authFilter = new RolesAllowedFilter(allowedRolesOnClasses);
       } else {
-        delegate = new PermitAllFilter();
+        authFilter = new PermitAllFilter();
       }
     }
-    delegate.filter(requestContext);
+    authFilter.filter(requestContext);
   }
 
   private static Set<String> getRolesFromMatchedResourceClasses(

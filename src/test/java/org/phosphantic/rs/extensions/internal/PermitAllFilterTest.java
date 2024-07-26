@@ -1,4 +1,4 @@
-package org.phosphantic.rs.extensions;
+package org.phosphantic.rs.extensions.internal;
 
 import org.junit.jupiter.api.Test;
 import org.phosphantic.rs.extensions.testing.ContainerRequestContextBuilder;

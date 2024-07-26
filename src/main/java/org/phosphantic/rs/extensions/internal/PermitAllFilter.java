@@ -1,4 +1,4 @@
-package org.phosphantic.rs.extensions;
+package org.phosphantic.rs.extensions.internal;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
