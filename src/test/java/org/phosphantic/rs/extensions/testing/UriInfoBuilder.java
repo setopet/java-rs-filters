@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 
 public class UriInfoBuilder {
@@ -31,12 +32,12 @@ public class UriInfoBuilder {
 
       @Override
       public List<PathSegment> getPathSegments() {
-        return List.of();
+        return Collections.emptyList();
       }
 
       @Override
       public List<PathSegment> getPathSegments(boolean b) {
-        return List.of();
+        return Collections.emptyList();
       }
 
       @Override
@@ -91,12 +92,12 @@ public class UriInfoBuilder {
 
       @Override
       public List<String> getMatchedURIs() {
-        return List.of();
+        return Collections.emptyList();
       }
 
       @Override
       public List<String> getMatchedURIs(boolean b) {
-        return List.of();
+        return Collections.emptyList();
       }
 
       @Override

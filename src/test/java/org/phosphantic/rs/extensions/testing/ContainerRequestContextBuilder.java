@@ -36,7 +36,7 @@ public class ContainerRequestContextBuilder {
 
       @Override
       public Collection<String> getPropertyNames() {
-        return List.of();
+        return Collections.emptyList();
       }
 
       @Override
@@ -101,17 +101,17 @@ public class ContainerRequestContextBuilder {
 
       @Override
       public List<MediaType> getAcceptableMediaTypes() {
-        return List.of();
+        return Collections.emptyList();
       }
 
       @Override
       public List<Locale> getAcceptableLanguages() {
-        return List.of();
+        return Collections.emptyList();
       }
 
       @Override
       public Map<String, Cookie> getCookies() {
-        return Map.of();
+        return Collections.emptyMap();
       }
 
       @Override
