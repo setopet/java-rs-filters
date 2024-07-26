@@ -1,4 +1,4 @@
-package org.peters.rest.extensions;
+package org.phosphantic.rs.extensions;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -14,10 +14,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
-import org.peters.rest.extensions.testing.ResourceInfoBuilder;
-import org.peters.rest.extensions.testing.UriInfoBuilder;
-import org.peters.rest.extensions.testing.ContainerRequestContextBuilder;
-import org.peters.rest.extensions.testing.SecurityContextBuilder;
+import org.phosphantic.rs.extensions.testing.ResourceInfoBuilder;
+import org.phosphantic.rs.extensions.testing.UriInfoBuilder;
+import org.phosphantic.rs.extensions.testing.ContainerRequestContextBuilder;
+import org.phosphantic.rs.extensions.testing.SecurityContextBuilder;
 
 public class SubResourceAwareRolesAllowedTest {
 

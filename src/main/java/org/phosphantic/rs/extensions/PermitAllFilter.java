@@ -1,4 +1,4 @@
-package org.peters.rest.extensions;
+package org.phosphantic.rs.extensions;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;

@@ -1,4 +1,4 @@
-package org.peters.rest.extensions;
+package org.phosphantic.rs.extensions;
 
 import jakarta.annotation.Priority;
 import jakarta.annotation.security.DenyAll;

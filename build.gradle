@@ -2,7 +2,7 @@ plugins {
     id("java-library")
 }
 
-group = "org.peters"
+group = "org.phosphantic"
 version = "0.1"
 
 java {

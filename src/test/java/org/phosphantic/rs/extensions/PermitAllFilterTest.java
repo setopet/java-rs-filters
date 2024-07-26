@@ -1,7 +1,7 @@
-package org.peters.rest.extensions;
+package org.phosphantic.rs.extensions;
 
 import org.junit.jupiter.api.Test;
-import org.peters.rest.extensions.testing.ContainerRequestContextBuilder;
+import org.phosphantic.rs.extensions.testing.ContainerRequestContextBuilder;
 
 public class PermitAllFilterTest {
 

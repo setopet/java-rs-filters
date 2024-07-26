@@ -1,4 +1,4 @@
-package org.peters.rest.extensions.testing;
+package org.phosphantic.rs.extensions.testing;
 
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.PathSegment;

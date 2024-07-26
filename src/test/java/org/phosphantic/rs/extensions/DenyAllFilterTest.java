@@ -1,10 +1,10 @@
-package org.peters.rest.extensions;
+package org.phosphantic.rs.extensions;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import jakarta.ws.rs.ForbiddenException;
 import org.junit.jupiter.api.Test;
-import org.peters.rest.extensions.testing.ContainerRequestContextBuilder;
+import org.phosphantic.rs.extensions.testing.ContainerRequestContextBuilder;
 
 public class DenyAllFilterTest {
 
