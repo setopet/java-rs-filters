@@ -50,12 +50,12 @@ import java.util.*;
  * @author Sebastian Peter
  */
 @Priority(Priorities.AUTHORIZATION)
-public class SubResourceAwareRolesAllowedFilter implements ContainerRequestFilter {
+public class SubResourceAwareAuthFilter implements ContainerRequestFilter {
 
   private ResourceInfo resourceInfo;
 
   @Inject
-  public SubResourceAwareRolesAllowedFilter(ResourceInfo resourceInfo) {
+  public SubResourceAwareAuthFilter(ResourceInfo resourceInfo) {
     this.resourceInfo = resourceInfo;
   }
 
@@ -84,6 +84,7 @@ public class SubResourceAwareRolesAllowedFilter implements ContainerRequestFilte
   private static Set<String> getRolesFromMatchedResourceClasses(
       final ContainerRequestContext containerRequestContext) {
     final HashSet<String> allowedRoles = new HashSet<>();
+    // UriInfo.getMatchedResources gets both sub-resources and resources with sub-resource locators
     for (final Object resource : containerRequestContext.getUriInfo().getMatchedResources()) {
       final RolesAllowed roles = resource.getClass().getAnnotation(RolesAllowed.class);
       if (roles != null) {

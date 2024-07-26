@@ -19,7 +19,7 @@ import org.phosphantic.rs.extensions.testing.UriInfoBuilder;
 import org.phosphantic.rs.extensions.testing.ContainerRequestContextBuilder;
 import org.phosphantic.rs.extensions.testing.SecurityContextBuilder;
 
-public class SubResourceAwareRolesAllowedTest {
+public class SubResourceAwareAuthFilterTest {
 
   @Path("/cat")
   // RolesAllowed on the class takes precedence over PermitAll
@@ -95,7 +95,7 @@ public class SubResourceAwareRolesAllowedTest {
   @Test
   public void shouldDenyAll() {
     final ContainerRequestFilter requestFilter =
-        new SubResourceAwareRolesAllowedFilter(
+        new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
                 .withResourceClass(CatResource.class)
                 .withResourceMethod("bath")
@@ -108,7 +108,7 @@ public class SubResourceAwareRolesAllowedTest {
   @Test
   public void shouldPermitAll() throws IOException {
     final ContainerRequestFilter requestFilter =
-        new SubResourceAwareRolesAllowedFilter(
+        new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
                 .withResourceClass(ForagingResource.class)
                 .withResourceMethod("food")
@@ -119,7 +119,7 @@ public class SubResourceAwareRolesAllowedTest {
   @Test
   public void shouldAllowRoleOnMethod() throws IOException {
     final ContainerRequestFilter requestFilter =
-        new SubResourceAwareRolesAllowedFilter(
+        new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
                 .withResourceClass(SecretMissionResource.class)
                 .withResourceMethod("domination")
@@ -137,7 +137,7 @@ public class SubResourceAwareRolesAllowedTest {
   @Test
   public void shouldDisAllowRoleOnMethod() {
     final ContainerRequestFilter requestFilter =
-        new SubResourceAwareRolesAllowedFilter(
+        new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
                 .withResourceClass(SecretMissionResource.class)
                 .withResourceMethod("domination")
@@ -155,7 +155,7 @@ public class SubResourceAwareRolesAllowedTest {
   @Test
   public void shouldAllowRoleOnClass() throws IOException {
     final ContainerRequestFilter requestFilter =
-        new SubResourceAwareRolesAllowedFilter(
+        new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
                 .withResourceClass(CatResource.class)
                 .withResourceMethod("cat")
@@ -177,7 +177,7 @@ public class SubResourceAwareRolesAllowedTest {
   @Test
   public void shouldDisallowRoleOnClass() {
     final ContainerRequestFilter requestFilter =
-        new SubResourceAwareRolesAllowedFilter(
+        new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
                 .withResourceClass(CatResource.class)
                 .withResourceMethod("cat")
@@ -199,7 +199,7 @@ public class SubResourceAwareRolesAllowedTest {
   @Test
   public void shouldAllowRoleOnLocatorResource() throws IOException {
     final ContainerRequestFilter requestFilter =
-        new SubResourceAwareRolesAllowedFilter(
+        new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
                 .withResourceClass(NoiseResource.class)
                 .withResourceMethod("meow")
@@ -221,7 +221,7 @@ public class SubResourceAwareRolesAllowedTest {
   @Test
   public void shouldDisallowRoleOnLocatorResource() {
     final ContainerRequestFilter requestFilter =
-        new SubResourceAwareRolesAllowedFilter(
+        new SubResourceAwareAuthFilter(
             new ResourceInfoBuilder()
                 .withResourceClass(NoiseResource.class)
                 .withResourceMethod("meow")
