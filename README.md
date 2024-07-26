@@ -28,6 +28,6 @@ public class NoiseResource {
 }
 ```
 
-By registering `SubResourceAwareAuthFilter` as `ContainerRequestFilter` with your framework, the `@RolesAllowed` annotation of the delegating resource is also applied for the request to the sub-resource.
+By registering `SubResourceAwareAuthFilter` as `ContainerRequestFilter` with your framework, `@RolesAllowed` annotations of delegating resources are also applied for requests to sub-resources.
 
 In the example above, the role `HUMAN` is required when accessing the `NoiseResource ` with `/cat/noise`. For further details consult the Javadocs.
