@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import java.util.Collection;
 
 /**
- * Filters {@link ContainerRequestFilter} according to provided roles
+ * A filter according to provided roles
  *
  * @author Sebastian Peter
  */
