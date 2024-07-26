@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+
+import jakarta.ws.rs.core.UriInfo;
 import org.junit.jupiter.api.Test;
 import org.phosphantic.rs.filters.testing.ResourceInfoBuilder;
 import org.phosphantic.rs.filters.testing.UriInfoBuilder;
@@ -55,7 +57,7 @@ public class SubResourceAwareAuthFilterTest {
 
     @GET
     @Path("/mission")
-    public Object mission() {
+    public SecretMissionResource mission() {
       return new SecretMissionResource();
     }
   }
@@ -76,6 +78,19 @@ public class SubResourceAwareAuthFilterTest {
     @RolesAllowed("ADEPT")
     public Response domination() {
       return Response.ok("striving for world domination").build();
+    }
+
+    @Path("/execution")
+    public ExecutionPlanResource execution() {
+      return new ExecutionPlanResource();
+    }
+  }
+
+  public static class ExecutionPlanResource {
+
+    @GET
+    public Response openDoor() {
+      return Response.ok("open that door for me, human").build();
     }
   }
 
@@ -146,24 +161,22 @@ public class SubResourceAwareAuthFilterTest {
                 .withResourceClass(CatResource.class)
                 .withResourceMethod("cat")
                 .build());
+    final UriInfo uriInfo =
+        new UriInfoBuilder()
+            .withMatchedResources(Collections.singletonList(new CatResource()))
+            .build();
     assertThrows(
         ForbiddenException.class,
         () ->
             requestFilter.filter(
                 new ContainerRequestContextBuilder()
-                    .withUriInfo(
-                        new UriInfoBuilder()
-                            .withMatchedResources(Collections.singletonList(new CatResource()))
-                            .build())
+                    .withUriInfo(uriInfo)
                     .withSecurityContext(
                         new SecurityContextBuilder().withSomeUserPrincipal().withNoRoles().build())
                     .build()));
     requestFilter.filter(
         new ContainerRequestContextBuilder()
-            .withUriInfo(
-                new UriInfoBuilder()
-                    .withMatchedResources(Collections.singletonList(new CatResource()))
-                    .build())
+            .withUriInfo(uriInfo)
             .withSecurityContext(
                 new SecurityContextBuilder()
                     .withSomeUserPrincipal()
@@ -180,25 +193,56 @@ public class SubResourceAwareAuthFilterTest {
                 .withResourceClass(NoiseResource.class)
                 .withResourceMethod("meow")
                 .build());
+    final UriInfo uriInfo =
+        new UriInfoBuilder()
+            .withMatchedResources(Arrays.asList(new NoiseResource(), new CatResource()))
+            .build();
     assertThrows(
         ForbiddenException.class,
         () ->
             requestFilter.filter(
                 new ContainerRequestContextBuilder()
-                    .withUriInfo(
-                        new UriInfoBuilder()
-                            .withMatchedResources(
-                                Arrays.asList(new NoiseResource(), new CatResource()))
-                            .build())
+                    .withUriInfo(uriInfo)
                     .withSecurityContext(
                         new SecurityContextBuilder().withSomeUserPrincipal().withNoRoles().build())
                     .build()));
     requestFilter.filter(
         new ContainerRequestContextBuilder()
-            .withUriInfo(
-                new UriInfoBuilder()
-                    .withMatchedResources(Arrays.asList(new NoiseResource(), new CatResource()))
+            .withUriInfo(uriInfo)
+            .withSecurityContext(
+                new SecurityContextBuilder()
+                    .withSomeUserPrincipal()
+                    .withRoles(Collections.singletonList("HUMAN"))
                     .build())
+            .build());
+  }
+
+  @Test
+  public void shouldApplyRolesAllowedForMultipleResourceLocators() throws IOException {
+    final ContainerRequestFilter requestFilter =
+        new SubResourceAwareAuthFilter(
+            new ResourceInfoBuilder()
+                .withResourceClass(ExecutionPlanResource.class)
+                .withResourceMethod("openDoor")
+                .build());
+    final UriInfo uriInfo =
+        new UriInfoBuilder()
+            .withMatchedResources(
+                Arrays.asList(
+                    new ExecutionPlanResource(), new SecretMissionResource(), new CatResource()))
+            .build();
+    assertThrows(
+        ForbiddenException.class,
+        () ->
+            requestFilter.filter(
+                new ContainerRequestContextBuilder()
+                    .withUriInfo(uriInfo)
+                    .withSecurityContext(
+                        new SecurityContextBuilder().withSomeUserPrincipal().withNoRoles().build())
+                    .build()));
+    requestFilter.filter(
+        new ContainerRequestContextBuilder()
+            .withUriInfo(uriInfo)
             .withSecurityContext(
                 new SecurityContextBuilder()
                     .withSomeUserPrincipal()
