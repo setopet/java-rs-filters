@@ -27,9 +27,9 @@ import java.util.*;
  *   <li>{@link DenyAll}
  * </ul>
  *
- * <p>The precedence of those annotations is similarly handled to {@code RolesAllowedDynamicFeature}
- * with the exception that for class-level annotations, annotations of all matched resources classes
- * - both delegating resources and sub-resources - are considered:
+ * <p>The precedence of those annotations is handled similarly to {@code
+ * RolesAllowedDynamicFeature}, except that for class-level annotations, annotations of
+ * all matched resources classes - both delegating resources and sub-resources - are considered:
  *
  * <ul>
  *   <li>{@link DenyAll} on the method
