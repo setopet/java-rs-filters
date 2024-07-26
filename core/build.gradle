@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "org.phosphantic"
-version = "0.1"
+version = "SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
