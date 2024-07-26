@@ -1,4 +1,4 @@
-package org.phosphantic.rs.extensions;
+package org.phosphantic.rs.filters.auth;
 
 import jakarta.annotation.Priority;
 import jakarta.annotation.security.DenyAll;
@@ -7,9 +7,9 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.*;
-import org.phosphantic.rs.extensions.internal.DenyAllFilter;
-import org.phosphantic.rs.extensions.internal.PermitAllFilter;
-import org.phosphantic.rs.extensions.internal.RolesAllowedFilter;
+import org.phosphantic.rs.filters.auth.internal.DenyAllFilter;
+import org.phosphantic.rs.filters.auth.internal.PermitAllFilter;
+import org.phosphantic.rs.filters.auth.internal.RolesAllowedFilter;
 
 import java.io.IOException;
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package org.phosphantic.rs.extensions;
+package org.phosphantic.rs.filters.auth;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -14,10 +14,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
-import org.phosphantic.rs.extensions.testing.ResourceInfoBuilder;
-import org.phosphantic.rs.extensions.testing.UriInfoBuilder;
-import org.phosphantic.rs.extensions.testing.ContainerRequestContextBuilder;
-import org.phosphantic.rs.extensions.testing.SecurityContextBuilder;
+import org.phosphantic.rs.filters.testing.ResourceInfoBuilder;
+import org.phosphantic.rs.filters.testing.UriInfoBuilder;
+import org.phosphantic.rs.filters.testing.ContainerRequestContextBuilder;
+import org.phosphantic.rs.filters.testing.SecurityContextBuilder;
 
 public class SubResourceAwareAuthFilterTest {
 

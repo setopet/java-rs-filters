@@ -1,4 +1,4 @@
-package org.phosphantic.rs.extensions.internal;
+package org.phosphantic.rs.filters.auth.internal;
 
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.container.ContainerRequestContext;

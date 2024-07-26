@@ -1,4 +1,4 @@
-package org.phosphantic.rs.extensions.testing;
+package org.phosphantic.rs.filters.testing;
 
 import jakarta.ws.rs.container.ResourceInfo;
 
