@@ -11,7 +11,7 @@ public class DropwizardApplication extends Application<Configuration> {
   public void run(Configuration configuration, Environment environment) throws Exception {
     environment.jersey().register(MyResource.class);
     environment.jersey().register(MySubResource.class);
-    environment.jersey().register(FakeAuthenticationFilter.class);
+    environment.jersey().register(UnsafeAuthenticationFilter.class);
     environment.jersey().register(SubResourceAwareAuthFilter.class);
   }
 

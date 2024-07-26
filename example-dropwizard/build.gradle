@@ -10,4 +10,9 @@ dependencies {
     implementation(project(":core"))
     implementation(platform("io.dropwizard:dropwizard-bom:4.0.7"))
     implementation("io.dropwizard:dropwizard-core")
+    testImplementation("io.dropwizard:dropwizard-testing")
+}
+
+test {
+    useJUnitPlatform()
 }

@@ -5,18 +5,17 @@ import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.SecurityContext;
-
-import java.io.IOException;
 import java.security.Principal;
 
+/** Do not use for anything */
 @Priority(Priorities.AUTHENTICATION)
-public class FakeAuthenticationFilter implements ContainerRequestFilter {
+public class UnsafeAuthenticationFilter implements ContainerRequestFilter {
 
   @Override
-  public void filter(ContainerRequestContext containerRequestContext) throws IOException {
-    // For simplicity, we assume, that the client is already authenticated and the role is written
-    // into the Authorization header.
-    // This is NOT a good idea for anything else then test purposes
+  public void filter(ContainerRequestContext containerRequestContext) {
+    // For simplicity, we assume, that the client is already authenticated and the claimed role is
+    // written directly into the Authorization header.
+    // This is NOT a good idea for anything else than test purposes
     if (containerRequestContext.getHeaders().getFirst("Authorization") != null) {
       final String claimedRole = containerRequestContext.getHeaders().getFirst("Authorization");
       containerRequestContext.setSecurityContext(
